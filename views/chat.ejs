@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="<%= lang %>" dir="<%= dir %>">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Chat IA — DinarBot vous conseille sur les taux de change en Tunisie.">
-  <title>DinarTrack — Chat IA</title>
+  <meta name="description" content="<%= __('chat_meta_description') %>">
+  <title><%= __('chat_meta_title') %></title>
   <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
@@ -12,26 +12,26 @@
 <main class="container">
 
   <div class="page-hero">
-    <h1>🤖 DinarBot</h1>
-    <p>Posez vos questions en arabe, français ou anglais — réponse instantanée</p>
+    <h1><%= __('chat_hero_title') %></h1>
+    <p><%= __('chat_hero_subtitle') %></p>
   </div>
 
   <div class="suggested-questions">
-    <button class="suggestion" onclick="sendSuggestion(this)">Quel est le meilleur taux EUR aujourd'hui ?</button>
-    <button class="suggestion" onclick="sendSuggestion(this)">متى يجب أن أبدل الدولار؟</button>
-    <button class="suggestion" onclick="sendSuggestion(this)">Should I exchange now or wait?</button>
-    <button class="suggestion" onclick="sendSuggestion(this)">Quelle banque propose le meilleur CHF ?</button>
+    <button class="suggestion" onclick="sendSuggestion(this)"><%= __('chat_suggest_1') %></button>
+    <button class="suggestion" onclick="sendSuggestion(this)"><%= __('chat_suggest_2') %></button>
+    <button class="suggestion" onclick="sendSuggestion(this)"><%= __('chat_suggest_3') %></button>
+    <button class="suggestion" onclick="sendSuggestion(this)"><%= __('chat_suggest_4') %></button>
   </div>
 
   <div class="chat-box" id="chatBox">
     <div class="message assistant">
-      👋 Bonjour ! Je suis <strong>DinarBot</strong>. Je connais les taux de toutes les banques tunisiennes en temps réel. Comment puis-je vous aider ?
+      <%- __('chat_welcome') %>
     </div>
   </div>
 
   <div class="chat-input-row">
-    <input type="text" id="userInput" placeholder="Écrivez votre message..." maxlength="500" autocomplete="off" />
-    <button id="sendBtn" onclick="sendMessage()">Envoyer ↑</button>
+    <input type="text" id="userInput" placeholder="<%= __('chat_placeholder') %>" maxlength="500" autocomplete="off" />
+    <button id="sendBtn" onclick="sendMessage()"><%= __('chat_send') %></button>
   </div>
 
 </main>
@@ -99,7 +99,7 @@
       }
     } catch (err) {
       removeTyping();
-      addMessage('assistant', '⚠️ Erreur de connexion. Veuillez réessayer.');
+      addMessage('assistant', '⚠️ ' + '<%= __('chat_error_prefix') %>');
     } finally {
       input.disabled = false;
       btn.disabled   = false;

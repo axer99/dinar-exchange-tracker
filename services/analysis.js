@@ -36,8 +36,8 @@ export function getTrend(allRates, currency) {
 
 export function getAdvice(trend) {
     if (trend === "up")
-        return "Bon moment pour changer — le taux est en hausse";
+        return "advice_up";
     if (trend === "down")
-        return "Attends encore — le taux est en baisse";
-    return "Taux stable — pas d\'avantage à attendre";
+        return "advice_down";
+    return "advice_stable";
 }

@@ -9,11 +9,11 @@ async function sendMessage(req ,res) {
     try{
         const messages = req.body.messages;
         const allRates = await getAllRates();
-        const reply = await chatWithAI(messages, allRates);
+                const reply = await chatWithAI(messages, allRates);
         return res.json({reply})
     } catch(error) {
         console.error(error)
-        res.status(500).json({ error: 'Erreur IA' })
+        res.status(500).json({ error: req.__('error_ia') })
     }
 }
 export { chatPage, sendMessage }

@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="<%= lang %>" dir="<%= dir %>">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Prédiction du taux de change du dinar tunisien sur 7 jours.">
-  <title>DinarTrack — Prédiction</title>
+  <meta name="description" content="<%= __('forecast_meta_description') %>">
+  <title><%= __('forecast_meta_title') %></title>
   <link rel="stylesheet" href="/css/main.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -13,8 +13,8 @@
 <main class="container">
 
   <div class="page-hero">
-    <h1>🔮 Prédiction — <%= currency %>/TND</h1>
-    <p>Analyse des tendances sur 60 jours + prévision à 7 jours</p>
+    <h1><%= __('forecast_hero_title', currency) %></h1>
+    <p><%= __('forecast_hero_subtitle') %></p>
   </div>
 
   <div class="pills-section">
@@ -29,7 +29,7 @@
   </div>
 
   <div class="disclaimer-banner">
-    ⚠️ <strong>Données simulées :</strong> La prédiction et l'historique affichés sont générés à titre indicatif. Ils ne reflètent pas les taux réels passés ou futurs.
+    <%- __('disclaimer_banner') %>
   </div>
 
   <div class="chart-card">
@@ -60,7 +60,7 @@
       labels: labels.concat(forecastLabels),
       datasets: [
         {
-          label: 'Historique',
+          label: '<%= __('chart_history_label') %>',
           data: values,
           borderColor: '#00C47D',
           backgroundColor: 'rgba(0,196,125,0.07)',
@@ -71,7 +71,7 @@
           pointHoverRadius: 4
         },
         {
-          label: 'Moyenne mobile (7j)',
+          label: '<%= __('chart_wma_label') %>',
           data: wma,
           borderColor: '#7C6EF8',
           borderDash: [5, 4],
@@ -81,7 +81,7 @@
           fill: false
         },
         {
-          label: 'Prédiction 7 jours',
+          label: '<%= __('chart_forecast_label') %>',
           data: new Array(values.length).fill(null).concat(forecast),
           borderColor: '#FF7F50',
           borderDash: [8, 4],

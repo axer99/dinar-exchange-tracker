@@ -6,6 +6,7 @@ import 'dotenv/config';
 import 'express-async-errors';
 import router from "./routes/index.js";
 import apiRouter from './routes/api.js';
+import i18n from "./middleware/i18n.js";
 
 import { PORT } from "./config.js";
 const __filename = fileURLToPath(import.meta.url);
@@ -16,6 +17,7 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(express.static("public"));
+app.use(i18n);
 app.use("/", router);
 app.use('/', apiRouter);
 

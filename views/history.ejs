@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="<%= lang %>" dir="<%= dir %>">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Historique du taux de change du dinar tunisien sur 30 jours.">
-  <title>DinarTrack — Historique</title>
+  <meta name="description" content="<%= __('history_meta_description') %>">
+  <title><%= __('history_meta_title') %></title>
   <link rel="stylesheet" href="/css/main.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -13,8 +13,8 @@
 <main class="container">
 
   <div class="page-hero">
-    <h1>📈 Historique — <%= currency %>/TND</h1>
-    <p>Évolution du taux sur les 30 derniers jours</p>
+    <h1><%= __('history_hero_title', currency) %></h1>
+    <p><%= __('history_hero_subtitle') %></p>
   </div>
 
   <div class="pills-section">
@@ -29,7 +29,7 @@
   </div>
 
   <div class="disclaimer-banner">
-    ⚠️ <strong>Données simulées :</strong> L'historique affiché est généré à titre indicatif. Il ne reflète pas les taux réels passés.
+    <%- __('history_disclaimer') %>
   </div>
 
   <div class="chart-card">

@@ -2,18 +2,20 @@ import Groq from "groq-sdk";
 const groq = new Groq({apiKey: process.env.GROQ_API_KEY});
 const MODEL = 'llama-3.3-70b-versatile';
 
-export async function analyzeMarket(allRates,currency){
+export async function analyzeMarket(allRates, currency, lang = 'fr') {
     const bct = allRates.find(b => b.bankName === "BCT");
     const rate = bct?.rates.find(r => r.currency === currency);
+    const languageNames = { fr: 'French (français)', en: 'English', ar: 'Arabic (العربية)' };
+    const targetLanguage = languageNames[lang] || 'French (français)';
     const prompt = `
-    Tu es un expert financier tunisien.
-    Taux ${currency}/TND aujourd'hui (BCT) :
-    - Achat : ${rate?.buy}
-    - Vente : ${rate?.sell}
-    - Tendance : ${rate?.trend}
-    Écris une analyse courte (2-3 lignes max) pour conseiller 
-    un utilisateur tunisien. Réponds dans la langue du message.
-    Sois direct et pratique.
+    You are a Tunisian financial expert analyzing today's exchange rates.
+    Today's BCT rate for ${currency}/TND is:
+    - Buy: ${rate?.buy}
+    - Sell: ${rate?.sell}
+    - Trend: ${rate?.trend}
+    Write a brief analysis (maximum 2-3 sentences) to advise a Tunisian user.
+    You MUST write the response in ${targetLanguage}.
+    Be direct, concise, and practical.
     `;
     const response = await groq.chat.completions.create({
         model : MODEL,

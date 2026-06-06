@@ -4,19 +4,48 @@
         Dinar<span>Track</span>
     </a>
     <div class="nav-links" id="navLinks">
-        <a href="/"        class="<%= page === 'home'     ? 'active' : '' %>">🏠 Accueil</a>
-        <a href="/history" class="<%= page === 'history'  ? 'active' : '' %>">📈 Historique</a>
-        <a href="/compare" class="<%= page === 'compare'  ? 'active' : '' %>">⚖️ Comparaison</a>
-        <a href="/forecast"class="<%= page === 'forecast' ? 'active' : '' %>">🔮 Prédiction</a>
-        <a href="/chat"    class="<%= page === 'chat'     ? 'active' : '' %>">🤖 Chat IA</a>
+        <a href="/"        class="<%= page === 'home'     ? 'active' : '' %>"><%= __('nav_home') %></a>
+        <a href="/history" class="<%= page === 'history'  ? 'active' : '' %>"><%= __('nav_history') %></a>
+        <a href="/compare" class="<%= page === 'compare'  ? 'active' : '' %>"><%= __('nav_compare') %></a>
+        <a href="/forecast"class="<%= page === 'forecast' ? 'active' : '' %>"><%= __('nav_forecast') %></a>
+        <a href="/chat"    class="<%= page === 'chat'     ? 'active' : '' %>"><%= __('nav_chat') %></a>
     </div>
     <div class="nav-right">
-        <button class="dark-toggle" id="darkToggle" title="Changer le thème">🌙</button>
-        <button class="nav-menu-btn" id="navMenuBtn" title="Menu">☰</button>
+        <div class="lang-dropdown" id="langDropdown">
+            <button class="lang-btn" id="langBtn">
+                🌐 <%= lang.toUpperCase() %>
+            </button>
+            <div class="lang-menu" id="langMenu">
+                <button onclick="changeLang('en')" class="<%= lang === 'en' ? 'active' : '' %>">🇬🇧 English</button>
+                <button onclick="changeLang('fr')" class="<%= lang === 'fr' ? 'active' : '' %>">🇫🇷 Français</button>
+                <button onclick="changeLang('ar')" class="<%= lang === 'ar' ? 'active' : '' %>">🇹🇳 العربية</button>
+            </div>
+        </div>
+        <button class="dark-toggle" id="darkToggle" title="<%= __('theme_toggle_title') %>">🌙</button>
+        <button class="nav-menu-btn" id="navMenuBtn" title="<%= __('menu_title') %>">☰</button>
     </div>
 </nav>
 <script>
   document.getElementById('navMenuBtn').addEventListener('click', function() {
     document.getElementById('navLinks').classList.toggle('open');
   });
+
+  // Language dropdown toggle
+  const langDropdown = document.getElementById('langDropdown');
+  const langBtn = document.getElementById('langBtn');
+  
+  langBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    langDropdown.classList.toggle('open');
+  });
+
+  document.addEventListener('click', function() {
+    langDropdown.classList.remove('open');
+  });
+
+  function changeLang(langCode) {
+    const url = new URL(window.location.href);
+    url.searchParams.set('lang', langCode);
+    window.location.href = url.toString();
+  }
 </script>

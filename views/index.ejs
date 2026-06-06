@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="<%= lang %>" dir="<%= dir %>">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Comparez les taux de change du dinar tunisien en temps réel dans les 20 meilleures banques de Tunisie.">
-  <title>DinarTrack — Taux de change en Tunisie</title>
+  <meta name="description" content="<%= __('meta_description') %>">
+  <title><%= __('meta_title') %></title>
   <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
@@ -16,9 +16,9 @@
   <!-- ── Hero ── -->
   <section class="hero">
     <div class="hero-top">
-      <div class="live-badge"><div class="live-dot"></div> Temps réel</div>
-      <h1>Taux de change <br>en Tunisie 🇹🇳</h1>
-      <p>Comparez les 20 banques tunisiennes et trouvez le meilleur taux instantanément</p>
+      <div class="live-badge"><div class="live-dot"></div> <%= __('real_time') %></div>
+      <h1><%- __('hero_title') %></h1>
+      <p><%= __('hero_subtitle') %></p>
     </div>
     <div class="currency-pills">
       <% for(var i = 0; i < CURRENCIES.length; i++) { %>
@@ -34,29 +34,29 @@
   <section class="stats-row">
     <div class="stat-card">
       <div class="stat-icon">💰</div>
-      <div class="stat-label">Meilleur achat</div>
+      <div class="stat-label"><%= __('stat_best_buy') %></div>
       <div class="stat-value green"><%= bestRates.bestBuy ? bestRates.bestBuy.value : '—' %></div>
       <div class="stat-sub"><%= bestRates.bestBuy ? bestRates.bestBuy.bank : '—' %></div>
     </div>
     <div class="stat-card">
       <div class="stat-icon">🏦</div>
-      <div class="stat-label">Meilleur vente</div>
+      <div class="stat-label"><%= __('stat_best_sell') %></div>
       <div class="stat-value green"><%= bestRates.bestSell ? bestRates.bestSell.value : '—' %></div>
       <div class="stat-sub"><%= bestRates.bestSell ? bestRates.bestSell.bank : '—' %></div>
     </div>
     <div class="stat-card">
       <div class="stat-icon"><%= trend === 'up' ? '📈' : trend === 'down' ? '📉' : '📊' %></div>
-      <div class="stat-label">Tendance</div>
+      <div class="stat-label"><%= __('stat_trend') %></div>
       <div class="stat-value <%= trend === 'up' ? 'trend-up' : trend === 'down' ? 'trend-down' : 'trend-stable' %>">
-        <%= trend === 'up' ? '▲ Hausse' : trend === 'down' ? '▼ Baisse' : '— Stable' %>
+        <%= trend === 'up' ? __('trend_up') : trend === 'down' ? __('trend_down') : __('trend_stable') %>
       </div>
-      <div class="stat-sub"><%= advice %></div>
+      <div class="stat-sub"><%= __(advice) %></div>
     </div>
     <div class="stat-card">
       <div class="stat-icon">💡</div>
-      <div class="stat-label">Économie possible</div>
+      <div class="stat-label"><%= __('stat_savings') %></div>
       <div class="stat-value green"><%= bestRates.savings %></div>
-      <div class="stat-sub">TND sur 1000 <%= currency %></div>
+      <div class="stat-sub"><%= __('savings_sub', currency) %></div>
     </div>
   </section>
 
@@ -64,7 +64,7 @@
   <section class="ai-bar">
     <div class="ai-icon">🤖</div>
     <div class="ai-bar-content">
-      <strong>Analyse IA — DinarBot</strong>
+      <strong><%= __('ai_analysis_title') %></strong>
       <%= aiAnalysis %>
     </div>
   </section>
@@ -72,16 +72,16 @@
   <!-- ── Banks Table ── -->
   <section class="banks-section">
     <div class="section-header">
-      <h2>Toutes les banques — <%= currency %>/TND</h2>
-      <span class="section-badge">20 banques</span>
+      <h2><%= __('table_title', currency) %></h2>
+      <span class="section-badge"><%= __('table_badge') %></span>
     </div>
     <table class="banks-table">
       <thead>
         <tr>
-          <th>Banque</th>
-          <th>Achat (TND)</th>
-          <th>Vente (TND)</th>
-          <th>Tendance</th>
+          <th><%= __('table_th_bank') %></th>
+          <th><%= __('table_th_buy') %></th>
+          <th><%= __('table_th_sell') %></th>
+          <th><%= __('table_th_trend') %></th>
         </tr>
       </thead>
       <tbody>
@@ -105,7 +105,7 @@
   <section class="calculator">
     <div class="calculator-header">
       <div class="stat-icon" style="margin-bottom:0">🧮</div>
-      <h2>Calculateur de conversion</h2>
+      <h2><%= __('calculator_title') %></h2>
     </div>
     <div class="calculator-body">
       <input type="number" id="amount" class="calc-input" value="1000" min="0" step="1">

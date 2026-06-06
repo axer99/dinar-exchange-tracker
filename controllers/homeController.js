@@ -12,15 +12,15 @@ async function homePage(req ,res) {
     const bestRates = getBestRates(allRates,currency);
     const trend = getTrend(allRates,currency);
     const advice = getAdvice(trend);
-    const aiCacheKey = `ai_${currency}`;
+    const aiCacheKey = `ai_${currency}_${req.lang}`;
     let aiAnalysis = aiCache.get(aiCacheKey) || '';
     if (!aiAnalysis) {
         try {
-            aiAnalysis = await analyzeMarket(allRates, currency);
+            aiAnalysis = await analyzeMarket(allRates, currency, req.lang);
             aiCache.set(aiCacheKey, aiAnalysis);
         } catch (err) {
             console.error('AI analysis failed:', err.message);
-            aiAnalysis = 'Analyse IA temporairement indisponible.';
+            aiAnalysis = req.__('ai_unavailable');
         }
     }
     res.render("index", {

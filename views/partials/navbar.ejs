@@ -1,0 +1,22 @@
+<nav class="navbar" id="navbar">
+    <a href="/" class="nav-brand">
+        <img src="/logo/Gemini_Generated_Image_u89a7ku89a7ku89a.png" alt="DinarTrack">
+        Dinar<span>Track</span>
+    </a>
+    <div class="nav-links" id="navLinks">
+        <a href="/"        class="<%= page === 'home'     ? 'active' : '' %>">🏠 Accueil</a>
+        <a href="/history" class="<%= page === 'history'  ? 'active' : '' %>">📈 Historique</a>
+        <a href="/compare" class="<%= page === 'compare'  ? 'active' : '' %>">⚖️ Comparaison</a>
+        <a href="/forecast"class="<%= page === 'forecast' ? 'active' : '' %>">🔮 Prédiction</a>
+        <a href="/chat"    class="<%= page === 'chat'     ? 'active' : '' %>">🤖 Chat IA</a>
+    </div>
+    <div class="nav-right">
+        <button class="dark-toggle" id="darkToggle" title="Changer le thème">🌙</button>
+        <button class="nav-menu-btn" id="navMenuBtn" title="Menu">☰</button>
+    </div>
+</nav>
+<script>
+  document.getElementById('navMenuBtn').addEventListener('click', function() {
+    document.getElementById('navLinks').classList.toggle('open');
+  });
+</script>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Historique du taux de change du dinar tunisien sur 30 jours.">
+  <title>DinarTrack — Historique</title>
+  <link rel="stylesheet" href="/css/main.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<%- include('partials/navbar') %>
+<main class="container">
+
+  <div class="page-hero">
+    <h1>📈 Historique — <%= currency %>/TND</h1>
+    <p>Évolution du taux sur les 30 derniers jours</p>
+  </div>
+
+  <div class="pills-section">
+    <div class="currency-pills">
+      <% for(var i = 0; i < CURRENCIES.length; i++) { %>
+      <% var cur = CURRENCIES[i] %>
+      <a href="/history?currency=<%= cur %>" class="pill <%= cur === currency ? 'active' : '' %>">
+        <%= cur %>
+      </a>
+      <% } %>
+    </div>
+  </div>
+
+  <div class="disclaimer-banner">
+    ⚠️ <strong>Données simulées :</strong> L'historique affiché est généré à titre indicatif. Il ne reflète pas les taux réels passés.
+  </div>
+
+  <div class="chart-card">
+    <canvas id="historyChart"></canvas>
+  </div>
+
+</main>
+<script>
+  var labels = <%- JSON.stringify(labels) %>;
+  var values = <%- JSON.stringify(values) %>;
+  var isDark = document.body.classList.contains('dark');
+  var gridColor = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)';
+  var textColor = isDark ? '#7A8599' : '#6E7A8A';
+
+  new Chart(document.getElementById('historyChart'), {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: '<%= currency %>/TND',
+        data: values,
+        borderColor: '#00C47D',
+        backgroundColor: 'rgba(0,196,125,0.08)',
+        borderWidth: 2.5,
+        tension: 0.4,
+        fill: true,
+        pointRadius: 0,
+        pointHoverRadius: 5,
+        pointHoverBackgroundColor: '#00C47D'
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { labels: { color: textColor, font: { family: 'Inter', size: 13 } } },
+        tooltip: { mode: 'index', intersect: false }
+      },
+      scales: {
+        x: { ticks: { color: textColor, font: { family: 'Inter', size: 11 }, maxTicksLimit: 8 }, grid: { color: gridColor } },
+        y: { ticks: { color: textColor, font: { family: 'Inter', size: 11 } }, grid: { color: gridColor } }
+      },
+      interaction: { mode: 'nearest', axis: 'x', intersect: false }
+    }
+  });
+</script>
+<script src="/js/darkmode.js"></script>
+</body>
+</html>

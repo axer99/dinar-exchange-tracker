@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Comparez les taux de change de toutes les banques tunisiennes pour la devise sélectionnée.">
+  <title>DinarTrack — Comparaison des banques</title>
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+<%- include('partials/navbar') %>
+<main class="container">
+
+  <div class="page-hero">
+    <h1>⚖️ Comparaison des banques</h1>
+    <p>Classement des banques tunisiennes par meilleur taux de vente</p>
+  </div>
+
+  <div class="pills-section">
+    <div class="currency-pills">
+      <% for(var i=0; i < CURRENCIES.length; i++) { %>
+      <% var cur = CURRENCIES[i] %>
+      <a href="/compare?currency=<%= cur %>" class="pill <%= cur === currency ? 'active' : '' %>">
+        <%= cur %>
+      </a>
+      <% } %>
+    </div>
+  </div>
+
+  <% if(bestRates.bestSell) { %>
+  <div class="best-banner">
+    🏆 <strong>Meilleur taux : <%= bestRates.bestSell.bank %></strong>
+    &nbsp;·&nbsp; <%= bestRates.bestSell.value %> TND
+    &nbsp;·&nbsp; Économie de <strong><%= bestRates.savings %> TND</strong> sur 1000 <%= currency %>
+  </div>
+  <% } %>
+
+  <section class="banks-section">
+    <div class="section-header">
+      <h2>Classement <%= currency %>/TND</h2>
+      <span class="section-badge"><%= comparison.length %> banques</span>
+    </div>
+    <table class="banks-table">
+      <thead>
+        <tr>
+          <th>Rang</th>
+          <th>Banque</th>
+          <th>Achat (TND)</th>
+          <th>Vente (TND)</th>
+          <th>Tendance</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for(var j = 0; j < comparison.length; j++) { %>
+        <tr class="<%= j === 0 ? 'best-row' : '' %>">
+          <td>
+            <% if(j === 0) { %>
+              <span class="rank-badge gold">🥇</span>
+            <% } else if(j === 1) { %>
+              <span class="rank-badge">🥈</span>
+            <% } else if(j === 2) { %>
+              <span class="rank-badge">🥉</span>
+            <% } else { %>
+              <span class="rank-badge"><%= j + 1 %></span>
+            <% } %>
+          </td>
+          <td><strong><%= comparison[j].bankName %></strong></td>
+          <td class="rate-buy"><%= comparison[j].buy %></td>
+          <td><%= comparison[j].sell %></td>
+          <td><%- comparison[j].trend === '▲' ? '<span style="color:var(--primary)">▲</span>' : comparison[j].trend === '▼' ? '<span style="color:var(--danger)">▼</span>' : '<span style="color:var(--text-secondary)">—</span>' %></td>
+        </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </section>
+
+</main>
+<script src="/js/darkmode.js"></script>
+</body>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Chat IA — DinarBot vous conseille sur les taux de change en Tunisie.">
+  <title>DinarTrack — Chat IA</title>
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+<%- include('partials/navbar') %>
+<main class="container">
+
+  <div class="page-hero">
+    <h1>🤖 DinarBot</h1>
+    <p>Posez vos questions en arabe, français ou anglais — réponse instantanée</p>
+  </div>
+
+  <div class="suggested-questions">
+    <button class="suggestion" onclick="sendSuggestion(this)">Quel est le meilleur taux EUR aujourd'hui ?</button>
+    <button class="suggestion" onclick="sendSuggestion(this)">متى يجب أن أبدل الدولار؟</button>
+    <button class="suggestion" onclick="sendSuggestion(this)">Should I exchange now or wait?</button>
+    <button class="suggestion" onclick="sendSuggestion(this)">Quelle banque propose le meilleur CHF ?</button>
+  </div>
+
+  <div class="chat-box" id="chatBox">
+    <div class="message assistant">
+      👋 Bonjour ! Je suis <strong>DinarBot</strong>. Je connais les taux de toutes les banques tunisiennes en temps réel. Comment puis-je vous aider ?
+    </div>
+  </div>
+
+  <div class="chat-input-row">
+    <input type="text" id="userInput" placeholder="Écrivez votre message..." maxlength="500" autocomplete="off" />
+    <button id="sendBtn" onclick="sendMessage()">Envoyer ↑</button>
+  </div>
+
+</main>
+<script>
+  var messages = [];
+
+  function addMessage(role, text) {
+    var box = document.getElementById('chatBox');
+    var div = document.createElement('div');
+    div.className = 'message ' + role;
+    div.textContent = text;
+    box.appendChild(div);
+    box.scrollTop = box.scrollHeight;
+    return div;
+  }
+
+  function showTyping() {
+    var box = document.getElementById('chatBox');
+    var div = document.createElement('div');
+    div.className = 'typing-dots';
+    div.id = 'typingIndicator';
+    div.innerHTML = '<span></span><span></span><span></span>';
+    box.appendChild(div);
+    box.scrollTop = box.scrollHeight;
+  }
+
+  function removeTyping() {
+    var t = document.getElementById('typingIndicator');
+    if (t) t.remove();
+  }
+
+  function sendSuggestion(btn) {
+    document.getElementById('userInput').value = btn.textContent;
+    sendMessage();
+  }
+
+  async function sendMessage() {
+    var input = document.getElementById('userInput');
+    var btn   = document.getElementById('sendBtn');
+    var text  = input.value.trim();
+    if (!text) return;
+
+    input.disabled = true;
+    btn.disabled   = true;
+
+    addMessage('user', text);
+    messages.push({ role: 'user', content: text });
+    if (messages.length > 20) messages = messages.slice(-20);
+    input.value = '';
+    showTyping();
+
+    try {
+      var response = await fetch('/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: messages }),
+      });
+      var data = await response.json();
+      removeTyping();
+      if (data.error) {
+        addMessage('assistant', '⚠️ ' + data.error);
+      } else {
+        addMessage('assistant', data.reply);
+        messages.push({ role: 'assistant', content: data.reply });
+      }
+    } catch (err) {
+      removeTyping();
+      addMessage('assistant', '⚠️ Erreur de connexion. Veuillez réessayer.');
+    } finally {
+      input.disabled = false;
+      btn.disabled   = false;
+      input.focus();
+    }
+  }
+
+  document.getElementById('userInput').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') sendMessage();
+  });
+</script>
+<script src="/js/darkmode.js"></script>
+</body>
+</html>

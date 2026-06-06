@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Prédiction du taux de change du dinar tunisien sur 7 jours.">
+  <title>DinarTrack — Prédiction</title>
+  <link rel="stylesheet" href="/css/main.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<%- include('partials/navbar') %>
+<main class="container">
+
+  <div class="page-hero">
+    <h1>🔮 Prédiction — <%= currency %>/TND</h1>
+    <p>Analyse des tendances sur 60 jours + prévision à 7 jours</p>
+  </div>
+
+  <div class="pills-section">
+    <div class="currency-pills">
+      <% for(var i = 0; i < CURRENCIES.length; i++) { %>
+      <% var cur = CURRENCIES[i] %>
+      <a href="/forecast?currency=<%= cur %>" class="pill <%= cur === currency ? 'active' : '' %>">
+        <%= cur %>
+      </a>
+      <% } %>
+    </div>
+  </div>
+
+  <div class="disclaimer-banner">
+    ⚠️ <strong>Données simulées :</strong> La prédiction et l'historique affichés sont générés à titre indicatif. Ils ne reflètent pas les taux réels passés ou futurs.
+  </div>
+
+  <div class="chart-card">
+    <canvas id="forecastChart"></canvas>
+  </div>
+
+</main>
+<script>
+  var labels   = <%- JSON.stringify(labels) %>;
+  var values   = <%- JSON.stringify(values) %>;
+  var wma      = <%- JSON.stringify(wma) %>;
+  var forecast = <%- JSON.stringify(forecast) %>;
+
+  var forecastLabels = [];
+  for (var i = 1; i <= 7; i++) {
+    var d = new Date();
+    d.setDate(d.getDate() + i);
+    forecastLabels.push(d.toISOString().split('T')[0]);
+  }
+
+  var isDark = document.body.classList.contains('dark');
+  var gridColor = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)';
+  var textColor = isDark ? '#7A8599' : '#6E7A8A';
+
+  new Chart(document.getElementById('forecastChart'), {
+    type: 'line',
+    data: {
+      labels: labels.concat(forecastLabels),
+      datasets: [
+        {
+          label: 'Historique',
+          data: values,
+          borderColor: '#00C47D',
+          backgroundColor: 'rgba(0,196,125,0.07)',
+          borderWidth: 2,
+          tension: 0.4,
+          fill: true,
+          pointRadius: 0,
+          pointHoverRadius: 4
+        },
+        {
+          label: 'Moyenne mobile (7j)',
+          data: wma,
+          borderColor: '#7C6EF8',
+          borderDash: [5, 4],
+          borderWidth: 2,
+          tension: 0.4,
+          pointRadius: 0,
+          fill: false
+        },
+        {
+          label: 'Prédiction 7 jours',
+          data: new Array(values.length).fill(null).concat(forecast),
+          borderColor: '#FF7F50',
+          borderDash: [8, 4],
+          borderWidth: 2.5,
+          tension: 0.4,
+          pointRadius: 4,
+          pointBackgroundColor: '#FF7F50',
+          fill: false
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { labels: { color: textColor, font: { family: 'Inter', size: 13 }, usePointStyle: true } },
+        tooltip: { mode: 'index', intersect: false }
+      },
+      scales: {
+        x: { ticks: { color: textColor, font: { family: 'Inter', size: 11 }, maxTicksLimit: 10 }, grid: { color: gridColor } },
+        y: { ticks: { color: textColor, font: { family: 'Inter', size: 11 } }, grid: { color: gridColor } }
+      },
+      interaction: { mode: 'nearest', axis: 'x', intersect: false }
+    }
+  });
+</script>
+<script src="/js/darkmode.js"></script>
+</body>
+</html>

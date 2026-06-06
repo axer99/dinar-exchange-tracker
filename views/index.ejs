@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Comparez les taux de change du dinar tunisien en temps réel dans les 20 meilleures banques de Tunisie.">
+  <title>DinarTrack — Taux de change en Tunisie</title>
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+
+<%- include('partials/navbar') %>
+
+<main class="container">
+
+  <!-- ── Hero ── -->
+  <section class="hero">
+    <div class="hero-top">
+      <div class="live-badge"><div class="live-dot"></div> Temps réel</div>
+      <h1>Taux de change <br>en Tunisie 🇹🇳</h1>
+      <p>Comparez les 20 banques tunisiennes et trouvez le meilleur taux instantanément</p>
+    </div>
+    <div class="currency-pills">
+      <% for(var i = 0; i < CURRENCIES.length; i++) { %>
+      <% var cur = CURRENCIES[i] %>
+      <a href="/?currency=<%= cur %>" class="pill <%= cur === currency ? 'active' : '' %>">
+        <%= cur %>
+      </a>
+      <% } %>
+    </div>
+  </section>
+
+  <!-- ── Stats ── -->
+  <section class="stats-row">
+    <div class="stat-card">
+      <div class="stat-icon">💰</div>
+      <div class="stat-label">Meilleur achat</div>
+      <div class="stat-value green"><%= bestRates.bestBuy ? bestRates.bestBuy.value : '—' %></div>
+      <div class="stat-sub"><%= bestRates.bestBuy ? bestRates.bestBuy.bank : '—' %></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">🏦</div>
+      <div class="stat-label">Meilleur vente</div>
+      <div class="stat-value green"><%= bestRates.bestSell ? bestRates.bestSell.value : '—' %></div>
+      <div class="stat-sub"><%= bestRates.bestSell ? bestRates.bestSell.bank : '—' %></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon"><%= trend === 'up' ? '📈' : trend === 'down' ? '📉' : '📊' %></div>
+      <div class="stat-label">Tendance</div>
+      <div class="stat-value <%= trend === 'up' ? 'trend-up' : trend === 'down' ? 'trend-down' : 'trend-stable' %>">
+        <%= trend === 'up' ? '▲ Hausse' : trend === 'down' ? '▼ Baisse' : '— Stable' %>
+      </div>
+      <div class="stat-sub"><%= advice %></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">💡</div>
+      <div class="stat-label">Économie possible</div>
+      <div class="stat-value green"><%= bestRates.savings %></div>
+      <div class="stat-sub">TND sur 1000 <%= currency %></div>
+    </div>
+  </section>
+
+  <!-- ── AI Bar ── -->
+  <section class="ai-bar">
+    <div class="ai-icon">🤖</div>
+    <div class="ai-bar-content">
+      <strong>Analyse IA — DinarBot</strong>
+      <%= aiAnalysis %>
+    </div>
+  </section>
+
+  <!-- ── Banks Table ── -->
+  <section class="banks-section">
+    <div class="section-header">
+      <h2>Toutes les banques — <%= currency %>/TND</h2>
+      <span class="section-badge">20 banques</span>
+    </div>
+    <table class="banks-table">
+      <thead>
+        <tr>
+          <th>Banque</th>
+          <th>Achat (TND)</th>
+          <th>Vente (TND)</th>
+          <th>Tendance</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for(var j = 0; j < allRates.length; j++) { %>
+        <% var bank = allRates[j] %>
+        <% var rate = bank.rates.find(function(r){ return r.currency === currency; }) %>
+        <% if(rate) { %>
+        <tr>
+          <td><strong><%= bank.bankName %></strong></td>
+          <td class="rate-buy"><%= rate.buy %></td>
+          <td><%= rate.sell %></td>
+          <td><%- rate.trend === '▲' ? '<span style="color:var(--primary)">▲</span>' : rate.trend === '▼' ? '<span style="color:var(--danger)">▼</span>' : '<span style="color:var(--text-secondary)">—</span>' %></td>
+        </tr>
+        <% } %>
+        <% } %>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ── Calculator ── -->
+  <section class="calculator">
+    <div class="calculator-header">
+      <div class="stat-icon" style="margin-bottom:0">🧮</div>
+      <h2>Calculateur de conversion</h2>
+    </div>
+    <div class="calculator-body">
+      <input type="number" id="amount" class="calc-input" value="1000" min="0" step="1">
+      <span class="calc-label"><%= currency %></span>
+      <span class="calc-equals">=</span>
+      <span id="result">—</span>
+      <span class="calc-currency">TND</span>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  var bestSell = parseFloat("<%= bestRates.bestSell ? bestRates.bestSell.value : '0' %>");
+  var amountInput = document.getElementById('amount');
+  var result = document.getElementById('result');
+  function updateCalc() {
+    var v = parseFloat(amountInput.value);
+    result.textContent = isNaN(v) ? '—' : (v * bestSell).toFixed(2);
+  }
+  amountInput.addEventListener('input', updateCalc);
+  updateCalc();
+</script>
+<script src="/js/darkmode.js"></script>
+</body>
+</html>
